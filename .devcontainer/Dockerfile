@@ -16,11 +16,13 @@ RUN apt-get update && apt-get install -y \
     sudo \
     gnupg2 \
     apt-transport-https \
+    ca-certificates \
+    dirmngr \
     && rm -rf /var/lib/apt/lists/*
 
 # Adicionar repositório oficial do ClickHouse
-RUN curl -fsSL https://packages.clickhouse.com/CLICKHOUSE-KEY.GPG | gpg --dearmor -o /usr/share/keyrings/clickhouse-keyring.gpg
-RUN echo "deb [signed-by=/usr/share/keyrings/clickhouse-keyring.gpg] https://packages.clickhouse.com/deb stable main" | tee /etc/apt/sources.list.d/clickhouse.list
+RUN curl -fsSL https://packages.clickhouse.com/CLICKHOUSE-KEY.GPG | gpg --dearmor -o /usr/share/keyrings/clickhouse-archive-keyring.gpg && \
+    echo "deb [signed-by=/usr/share/keyrings/clickhouse-archive-keyring.gpg] https://packages.clickhouse.com/deb stable main" | tee /etc/apt/sources.list.d/clickhouse.list
 
 # Instalar clickhouse-server e clickhouse-client
 RUN apt-get update && apt-get install -y clickhouse-server clickhouse-client && rm -rf /var/lib/apt/lists/*
